@@ -12,7 +12,11 @@ public class RunnerAnnotation {
     MyAwfulTest myAwfulTest = new MyAwfulTest();
     Method[] declaredMethods = MyAwfulTest.class.getDeclaredMethods();
 
-    public void Before() {
+    public void run(){
+        before();
+    }
+
+    public void before() {
         //Method[] decl = MyAwfulTest.class.getDeclaredMethod("testBefore");
         for (Method method : declaredMethods) {
             try {
@@ -25,10 +29,10 @@ public class RunnerAnnotation {
             }
         }
         System.out.println();
-        Test();
+        test();
     }
 
-    public void Test() {
+    public void test() {
         int passedTests = 0;
         int failedTests = 0;
 
@@ -39,7 +43,7 @@ public class RunnerAnnotation {
 
             if (!method.isAnnotationPresent(Before.class) && !method.isAnnotationPresent(After.class)
                     && !method.isAnnotationPresent(BeforeEach.class) && !method.isAnnotationPresent(AfterEach.class)) {
-                BeforeEach();
+                beforeEach();
                 try {
                     method.invoke(myAwfulTest);
                     System.out.println("Тест " + method.getName() + " успешно прошел");
@@ -49,7 +53,7 @@ public class RunnerAnnotation {
                     failedTests++;
                     //throwable.printStackTrace();
                 }
-                AfterEach();
+                afterEach();
             }
 
             System.out.println();
@@ -58,10 +62,10 @@ public class RunnerAnnotation {
         System.out.println("Количество прошедших тестов: " + passedTests);
         System.out.println("Количество упавших тестов: " + failedTests);
         System.out.println();
-        After();
+        after();
     }
 
-    public void After() {
+    public void after() {
         for (Method method : declaredMethods) {
             try {
                 if (method.isAnnotationPresent(After.class)) {
@@ -75,7 +79,7 @@ public class RunnerAnnotation {
         }
     }
 
-    public void BeforeEach() {
+    public void beforeEach() {
         for (Method method : declaredMethods) {
             try {
                 if (method.isAnnotationPresent(BeforeEach.class)) {
@@ -88,7 +92,7 @@ public class RunnerAnnotation {
         }
     }
 
-    public void AfterEach() {
+    public void afterEach() {
         for (Method method : declaredMethods) {
             try {
                 if (method.isAnnotationPresent(AfterEach.class)) {
