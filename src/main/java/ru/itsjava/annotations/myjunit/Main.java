@@ -2,7 +2,9 @@ package ru.itsjava.annotations.myjunit;
 
 public class Main {
     public static void main(String[] args) {
-        RunnerAnnotation runnerAnnotation =  new RunnerAnnotation();
+        IGeneral iGeneralAwful = new MyAwfulTest();
+        IGeneral iGeneralGood = new MyGoodTest();
+        RunnerAnnotation runnerAnnotation = new RunnerAnnotation(iGeneralAwful);
         runnerAnnotation.run();
     }
 }

@@ -1,27 +1,36 @@
 package ru.itsjava.annotations.myjunit;
 
-import ru.itsjava.annotations.myjunit.repannotation.After;
-import ru.itsjava.annotations.myjunit.repannotation.AfterEach;
-import ru.itsjava.annotations.myjunit.repannotation.Before;
-import ru.itsjava.annotations.myjunit.repannotation.BeforeEach;
+import ru.itsjava.annotations.myjunit.repannotation.*;
 
 import java.lang.reflect.Method;
 
 public class RunnerAnnotation {
+    private IGeneral iGeneral;
 
-    MyAwfulTest myAwfulTest = new MyAwfulTest();
-    Method[] declaredMethods = MyAwfulTest.class.getDeclaredMethods();
-
-    public void run(){
-        before();
+    public RunnerAnnotation(IGeneral iGeneral) {
+        this.iGeneral = iGeneral;
     }
 
-    public void before() {
-        //Method[] decl = MyAwfulTest.class.getDeclaredMethod("testBefore");
+    public Method[] methodsMyAwfulTest(){
+        Method[] declaredMethods = MyAwfulTest.class.getDeclaredMethods();
+        return declaredMethods;
+    }
+
+    public Method[] methodsMyGoodTest(){
+        Method[] declaredMethods = MyGoodTest.class.getDeclaredMethods();
+        return declaredMethods;
+    }
+
+    public void run(){
+        beforeRun();
+    }
+
+    public void beforeRun(){
+        Method[] declaredMethods = before();
         for (Method method : declaredMethods) {
             try {
                 if (method.isAnnotationPresent(Before.class)) {
-                    method.invoke(myAwfulTest);
+                    method.invoke(iGeneral);
                     System.out.println("Тест " + method.getName() + " успешно прошел");
                 }
             } catch (Throwable throwable) {
@@ -32,26 +41,33 @@ public class RunnerAnnotation {
         test();
     }
 
+    public Method[] before() {
+        if(iGeneral instanceof MyAwfulTest){
+            return methodsMyAwfulTest();
+        }
+        if(iGeneral instanceof MyGoodTest){
+            return methodsMyGoodTest();
+        }
+        return null;
+    }
+
     public void test() {
         int passedTests = 0;
         int failedTests = 0;
 
-        MyAwfulTest myAwfulTest = new MyAwfulTest();
-        Method[] declaredMethods = MyAwfulTest.class.getDeclaredMethods();
+        Method[] declaredMethods = before();
 
         for (Method method : declaredMethods) {
 
-            if (!method.isAnnotationPresent(Before.class) && !method.isAnnotationPresent(After.class)
-                    && !method.isAnnotationPresent(BeforeEach.class) && !method.isAnnotationPresent(AfterEach.class)) {
+            if (method.isAnnotationPresent(Test.class)) {
                 beforeEach();
                 try {
-                    method.invoke(myAwfulTest);
+                    method.invoke(iGeneral);
                     System.out.println("Тест " + method.getName() + " успешно прошел");
                     passedTests++;
                 } catch (Throwable throwable) {
                     System.out.println("Тест " + method.getName() + " упал");
                     failedTests++;
-                    //throwable.printStackTrace();
                 }
                 afterEach();
             }
@@ -66,10 +82,11 @@ public class RunnerAnnotation {
     }
 
     public void after() {
+        Method[] declaredMethods = before();
         for (Method method : declaredMethods) {
             try {
                 if (method.isAnnotationPresent(After.class)) {
-                    method.invoke(myAwfulTest);
+                    method.invoke(iGeneral);
                     System.out.println("Тест " + method.getName() + " успешно прошел");
                     System.out.println();
                 }
@@ -80,10 +97,11 @@ public class RunnerAnnotation {
     }
 
     public void beforeEach() {
+        Method[] declaredMethods = before();
         for (Method method : declaredMethods) {
             try {
                 if (method.isAnnotationPresent(BeforeEach.class)) {
-                    method.invoke(myAwfulTest);
+                    method.invoke(iGeneral);
                     //System.out.println("Тест " + method.getName() + " успешно прошел");
                 }
             } catch (Throwable throwable) {
@@ -93,10 +111,11 @@ public class RunnerAnnotation {
     }
 
     public void afterEach() {
+        Method[] declaredMethods = before();
         for (Method method : declaredMethods) {
             try {
                 if (method.isAnnotationPresent(AfterEach.class)) {
-                    method.invoke(myAwfulTest);
+                    method.invoke(iGeneral);
                     //System.out.println("Тест " + method.getName() + " успешно прошел");
                 }
             } catch (Throwable throwable) {

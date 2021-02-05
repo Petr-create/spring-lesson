@@ -2,7 +2,7 @@ package ru.itsjava.annotations.myjunit;
 
 import ru.itsjava.annotations.myjunit.repannotation.*;
 
-public class MyAwfulTest implements IGeneral{
+public class MyGoodTest implements IGeneral{
     @Before
     public void testBefore(){
         System.out.println("Тест Before");
