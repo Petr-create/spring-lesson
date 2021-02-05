@@ -2,7 +2,7 @@ package ru.itsjava.annotations.myjunit;
 
 import ru.itsjava.annotations.myjunit.repannotation.*;
 
-public class MyAwfulTest implements IGeneral{
+public class MyAwfulTest{
     @Before
     public void testBefore(){
         System.out.println("Тест Before");
@@ -44,4 +44,5 @@ public class MyAwfulTest implements IGeneral{
     public void test6(){
         System.out.println("test6");
     }
+
 }

@@ -5,19 +5,14 @@ import ru.itsjava.annotations.myjunit.repannotation.*;
 import java.lang.reflect.Method;
 
 public class RunnerAnnotation {
-    private IGeneral iGeneral;
+    private Object iGeneral;
 
-    public RunnerAnnotation(IGeneral iGeneral) {
+    public RunnerAnnotation(Object iGeneral) {
         this.iGeneral = iGeneral;
     }
 
-    public Method[] methodsMyAwfulTest(){
-        Method[] declaredMethods = MyAwfulTest.class.getDeclaredMethods();
-        return declaredMethods;
-    }
-
-    public Method[] methodsMyGoodTest(){
-        Method[] declaredMethods = MyGoodTest.class.getDeclaredMethods();
+    public Method[] methodsCount(){
+        Method[] declaredMethods = iGeneral.getClass().getDeclaredMethods();
         return declaredMethods;
     }
 
@@ -26,7 +21,7 @@ public class RunnerAnnotation {
     }
 
     public void beforeRun(){
-        Method[] declaredMethods = before();
+        Method[] declaredMethods = methodsCount();
         for (Method method : declaredMethods) {
             try {
                 if (method.isAnnotationPresent(Before.class)) {
@@ -41,21 +36,12 @@ public class RunnerAnnotation {
         test();
     }
 
-    public Method[] before() {
-        if(iGeneral instanceof MyAwfulTest){
-            return methodsMyAwfulTest();
-        }
-        if(iGeneral instanceof MyGoodTest){
-            return methodsMyGoodTest();
-        }
-        return null;
-    }
 
     public void test() {
         int passedTests = 0;
         int failedTests = 0;
 
-        Method[] declaredMethods = before();
+        Method[] declaredMethods = methodsCount();
 
         for (Method method : declaredMethods) {
 
@@ -82,7 +68,7 @@ public class RunnerAnnotation {
     }
 
     public void after() {
-        Method[] declaredMethods = before();
+        Method[] declaredMethods = methodsCount();
         for (Method method : declaredMethods) {
             try {
                 if (method.isAnnotationPresent(After.class)) {
@@ -97,7 +83,7 @@ public class RunnerAnnotation {
     }
 
     public void beforeEach() {
-        Method[] declaredMethods = before();
+        Method[] declaredMethods = methodsCount();
         for (Method method : declaredMethods) {
             try {
                 if (method.isAnnotationPresent(BeforeEach.class)) {
@@ -111,7 +97,7 @@ public class RunnerAnnotation {
     }
 
     public void afterEach() {
-        Method[] declaredMethods = before();
+        Method[] declaredMethods = methodsCount();
         for (Method method : declaredMethods) {
             try {
                 if (method.isAnnotationPresent(AfterEach.class)) {
@@ -123,4 +109,5 @@ public class RunnerAnnotation {
             }
         }
     }
+
 }
